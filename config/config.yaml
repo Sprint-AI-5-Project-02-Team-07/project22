@@ -1,0 +1,13 @@
+model:
+  llm: "gpt-5-mini"
+  embedding: "text-embedding-3-small"
+  temperature: 0
+
+process:
+  chunk_size: 1000
+  chunk_overlap: 200
+
+path:
+  csv_file: "data/data_list.csv"
+  files_folder: "data/files"
+  vector_db: "vector_db/rfp_index"

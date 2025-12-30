@@ -1,0 +1,16 @@
+[project]
+name = "project-2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "langchain>=1.2.0",
+    "langchain-chroma>=1.1.0",
+    "langchain-community>=0.4.1",
+    "langchain-openai>=1.1.6",
+    "langchain-teddynote>=0.5.4",
+    "pandas>=2.3.3",
+    "python-dotenv>=1.2.1",
+    "pywin32>=311",
+]
