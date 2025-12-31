@@ -5,7 +5,8 @@ from langchain_core.documents import Document
 
 def load_rfp_documents(config: dict):
     csv_path = config['path']['csv_file']
-    json_folder = config['path']['files_folder']
+    # Change: Load from Clean JSON folder
+    json_folder = config['path']['clean_json'] 
     
     print(f"[Loader] 메타데이터 로드: {csv_path}")
     df = pd.read_csv(csv_path)
@@ -19,7 +20,8 @@ def load_rfp_documents(config: dict):
     for _, row in df.iterrows():
         original_name = str(row['파일명'])
         base_name = os.path.splitext(original_name)[0]
-        json_file_name = f"{base_name}_parsed.json"
+        # Change: File naming convention uses _clean.jsonl
+        json_file_name = f"{base_name}_clean.jsonl"
         json_path = os.path.join(json_folder, json_file_name)
         
         # --- [안전한 타입 변환 로직] ---
@@ -48,23 +50,23 @@ def load_rfp_documents(config: dict):
         }
         # -----------------------------
 
-        # 1. JSON 로드
+        # 1. JSONL 로드
         loaded = False
         if os.path.exists(json_path):
             try:
+                # Change: Read line by line for JSONL
                 with open(json_path, 'r', encoding='utf-8') as f:
-                    pages_data = json.load(f)
-                
-                for page_item in pages_data:
-                    content = page_item.get('content', '')
-                    page_num = page_item.get('page', 0)
-                    
-                    if not content.strip(): continue
+                    for line in f:
+                        page_item = json.loads(line)
+                        content = page_item.get('content', '')
+                        page_num = page_item.get('page', 0)
                         
-                    page_metadata = base_metadata.copy()
-                    page_metadata['page'] = page_num
-                    
-                    all_docs.append(Document(page_content=content, metadata=page_metadata))
+                        if not content.strip(): continue
+                            
+                        page_metadata = base_metadata.copy()
+                        page_metadata['page'] = page_num
+                        
+                        all_docs.append(Document(page_content=content, metadata=page_metadata))
                 
                 success_count += 1
                 loaded = True
