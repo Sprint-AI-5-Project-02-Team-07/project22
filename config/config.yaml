@@ -9,7 +9,7 @@ process:
 
 path:
   csv_file: "data/data_list.csv"
-  raw_pdf: "data/raw_pdf"        # PDF 원본 폴더
+  raw_data: "data/raw_data"      # HWP & PDF 원본 통합 폴더
   raw_json: "data/parsed_json"   # Upstage 파싱 결과 (JSON)
   clean_json: "data/clean_json"  # 정제된 데이터 (JSONL)
   vector_db: "vector_db/rfp_index"
