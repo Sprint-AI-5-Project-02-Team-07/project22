@@ -1,8 +1,7 @@
 import yaml
 import os
 from dotenv import load_dotenv
-from src.loader import load_rfp_documents
-from src.indexer import build_vector_db # indexer 함수명 확인 (build_vector_db)
+from src.indexer import load_vector_db  # [변경] 단순 로드용 함수
 from src.retriever import get_advanced_retriever
 from src.generator import create_bidmate_chain
 
@@ -13,16 +12,12 @@ def main():
     with open("config/config.yaml", "r") as f:
         config = yaml.safe_load(f)
 
-    # 2. 데이터 처리 (PDF 전용 Loader)
-    # 반드시 config['path']['raw_folder']에 PDF 파일들이 있어야 함
-    docs = load_rfp_documents(config)
+    # 2. 벡터 DB 로드 (기존 DB 사용)
+    vectorstore = load_vector_db(config)
     
-    if not docs:
-        print("[Error] 로드된 문서가 없습니다. 데이터 경로를 확인하세요.")
+    if not vectorstore:
+        print("[Error] 벡터 DB가 없습니다. 먼저 'python pipeline.py --step all'을 실행하여 데이터를 구축하세요.")
         return
-
-    # 3. 벡터 DB 구축
-    vectorstore = build_vector_db(docs, config)
     
     # 4. Self-Querying Retriever 설정 (오류 수정됨)
     try:
